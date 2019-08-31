@@ -27,15 +27,15 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        matrix.cpp
+        matrixwidget.cpp
 
 HEADERS += \
         mainwindow.h \
-        matrix.h
+        matrixwidget.h
 
 FORMS += \
         mainwindow.ui \
-        matrix.ui
+        matrixwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

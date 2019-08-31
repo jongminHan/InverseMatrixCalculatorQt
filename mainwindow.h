@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "matrixwidget.h"
 #include <QMainWindow>
+#include <memory>
 
 namespace Ui
 {
@@ -20,6 +22,7 @@ private slots:
 
 private:
     Ui::MainWindow* ui;
+    std::shared_ptr<MatrixWidget> mMatrixWidget;
 };
 
 #endif // MAINWINDOW_H
