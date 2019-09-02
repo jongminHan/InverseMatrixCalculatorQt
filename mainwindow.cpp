@@ -25,7 +25,4 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_spinBox_valueChanged(int dimension)
 {
     mDimension = dimension;
-
-    std::cout << mDimension << std::endl;
-
 }

@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "matrixwidget.h"
-#include <iostream>
 #include <QMainWindow>
 #include <memory>
 

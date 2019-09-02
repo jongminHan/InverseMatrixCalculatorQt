@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QTextEdit>
 #include <QPushButton>
-#include <memory>
 #include <iostream>
 
 namespace Ui
@@ -18,6 +17,8 @@ class MatrixWidget : public QWidget
 public:
     explicit MatrixWidget(QWidget* parent = nullptr, int dimension = 0);
     ~MatrixWidget();
+    void GetCofactor(double* mat, double* temp, int p, int q, int n);
+    double GetDeterminantRecursive(double* mat, int n);
 private slots:
     void updateMatrix();
 private:
