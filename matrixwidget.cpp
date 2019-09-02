@@ -7,34 +7,54 @@ MatrixWidget::MatrixWidget(QWidget* parent, int dimension)
     , mDimension(dimension)
 {
     ui->setupUi(this);
-    mMatrixGrid = new QTextEdit*[mDimension * mDimension];
+    mMatrixTextGrid = new QTextEdit*[mDimension * mDimension];
+    mMatrix = new double[mDimension * mDimension] { 0 };
+
 
     for (int i = 0; i < mDimension; i++)
     {
         for (int j = 0; j < mDimension; j++)
         {
-            mMatrixGrid[i * mDimension + j] = new QTextEdit(this);
-            mMatrixGrid[i * mDimension + j]->resize(30, 30);
+            mMatrixTextGrid[i * mDimension + j] = new QTextEdit(this);
+            mMatrixTextGrid[i * mDimension + j]->resize(30, 30);
             int xPos = 20 + 40 * i;
             int yPos = 20 + 40 * j;
-            mMatrixGrid[i * mDimension + j]->move(xPos, yPos);
+            mMatrixTextGrid[i * mDimension + j]->move(xPos, yPos);
             std::cout << "(" << xPos << ", " << yPos << ")" << std::endl;
         }
-
     }
+
+    mCalButton = new QPushButton(this);
+    mCalButton->setText("Calculate");
+    mCalButton->resize(100, 30);
+    mCalButton->move(20 + 40 * (mDimension), 20 + 40 * (mDimension - 1));
+    connect(mCalButton, SIGNAL(clicked()), this, SLOT(updateMatrix()));
 }
 
 MatrixWidget::~MatrixWidget()
 {
     delete ui;
+    delete mCalButton;
 
     for (int i = 0; i < mDimension; i++)
     {
         for (int j = 0; j < mDimension; j++)
         {
-            delete mMatrixGrid[i * mDimension + j];
+            delete mMatrixTextGrid[i * mDimension + j];
         }
     }
 
-    delete[] mMatrixGrid;
+    delete[] mMatrixTextGrid;
+    delete[] mMatrix;
+}
+
+void MatrixWidget::updateMatrix()
+{
+    for (int i = 0; i < mDimension; i++)
+    {
+        for (int j = 0; j < mDimension; j++)
+        {
+            mMatrix[i * mDimension + j] = mMatrixTextGrid[i * mDimension + j]->toPlainText().toDouble();
+        }
+    }
 }
