@@ -19,6 +19,8 @@ public:
     ~MatrixWidget();
     void GetCofactor(double* mat, double* temp, int p, int q, int n);
     double GetDeterminantRecursive(double* mat, int n);
+    void Adjoint(double* mat, double* adj);
+    bool Inverse(double* mat, double* inverse);
 private slots:
     void updateMatrix();
 private:

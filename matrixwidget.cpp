@@ -107,6 +107,69 @@ double MatrixWidget::GetDeterminantRecursive(double* mat, int n)
     return D;
 }
 
+// Function to get adjoint of A[N][N] in adj[N][N].
+void MatrixWidget::Adjoint(double* mat, double* adj)
+{
+    if (mDimension == 1)
+    {
+        adj[0] = 1;
+        return;
+    }
+
+    // temp is used to store cofactors of A[][]
+    int sign = 1;
+    double* temp = new double[mDimension * mDimension];
+
+    for (int i = 0; i < mDimension; i++)
+    {
+        for (int j = 0; j < mDimension; j++)
+        {
+            // Get cofactor of A[i][j]
+            GetCofactor(mat, temp, i, j, mDimension);
+
+            // sign of adj[j][i] positive if sum of row
+            // and column indexes is even.
+            sign = ((i + j) % 2 == 0) ? 1 : -1;
+
+            // Interchanging rows and columns to get the
+            // transpose of the cofactor matrix
+            adj[j * mDimension + i] = sign * GetDeterminantRecursive(temp, mDimension - 1);
+        }
+    }
+
+    delete[] temp;
+}
+
+// Function to calculate and store inverse, returns false if
+// matrix is singular
+bool MatrixWidget::Inverse(double* mat, double* inverse)
+{
+    // Find determinant of A[][]
+    double det = GetDeterminantRecursive(mat, mDimension);
+    if (static_cast<int>(det) == 0)
+    {
+        std::cout << "Singular matrix, can't find its inverse\n";
+        return false;
+    }
+
+    // Find adjoint
+    double* adj = new double[mDimension * mDimension];
+
+    Adjoint(mat, adj);
+
+    // Find Inverse using formula "inverse(A) = adj(A)/det(A)"
+    for (int i = 0; i < mDimension; i++)
+    {
+        for (int j = 0; j < mDimension; j++)
+        {
+            inverse[i * mDimension + j] = adj[i * mDimension + j] / det;
+        }
+    }
+
+    delete[] adj;
+    return true;
+}
+
 void MatrixWidget::updateMatrix()
 {
     for (int i = 0; i < mDimension; i++)
