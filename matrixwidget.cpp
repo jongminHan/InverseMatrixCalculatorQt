@@ -7,7 +7,7 @@ MatrixWidget::MatrixWidget(QWidget* parent, int dimension)
     , mDimension(dimension)
 {
     ui->setupUi(this);
-    mMatrixTextGrid = new QTextEdit*[mDimension * mDimension];
+    mMatrixTextGrid = new QDoubleSpinBox*[mDimension * mDimension];
     mMatrix = new double[mDimension * mDimension] { 0 };
 
 
@@ -15,9 +15,9 @@ MatrixWidget::MatrixWidget(QWidget* parent, int dimension)
     {
         for (int j = 0; j < mDimension; j++)
         {
-            mMatrixTextGrid[i * mDimension + j] = new QTextEdit(this);
-            mMatrixTextGrid[i * mDimension + j]->resize(30, 30);
-            int xPos = 20 + 40 * i;
+            mMatrixTextGrid[i * mDimension + j] = new QDoubleSpinBox(this);
+            mMatrixTextGrid[i * mDimension + j]->resize(100, 30);
+            int xPos = 20 + 110 * i;
             int yPos = 20 + 40 * j;
             mMatrixTextGrid[i * mDimension + j]->move(xPos, yPos);
         }
@@ -26,7 +26,7 @@ MatrixWidget::MatrixWidget(QWidget* parent, int dimension)
     mCalButton = new QPushButton(this);
     mCalButton->setText("Calculate");
     mCalButton->resize(100, 30);
-    mCalButton->move(20 + 40 * (mDimension), 20 + 40 * (mDimension - 1));
+    mCalButton->move(20 + 110 * mDimension, 20 + 40 * (mDimension - 1));
     connect(mCalButton, SIGNAL(clicked()), this, SLOT(updateMatrix()));
 }
 
@@ -176,9 +176,29 @@ void MatrixWidget::updateMatrix()
     {
         for (int j = 0; j < mDimension; j++)
         {
-            mMatrix[i * mDimension + j] = mMatrixTextGrid[i * mDimension + j]->toPlainText().toDouble();
+            mMatrix[i * mDimension + j] = mMatrixTextGrid[i * mDimension + j]->value();
         }
     }
 
-    std::cout << GetDeterminantRecursive(mMatrix, mDimension) << std::endl;
+    double* adj = new double[mDimension * mDimension];  // To store adjoint of A[][]
+
+    double* inv = new double[mDimension * mDimension];  // To store inverse of A[][]
+
+
+    Adjoint(mMatrix, adj);
+
+
+    if (Inverse(mMatrix, inv))
+    {
+        for (int i = 0; i < mDimension; i++)
+        {
+            for (int j = 0; j < mDimension; j++)
+            {
+                mMatrixTextGrid[i * mDimension + j]->setValue(inv[i * mDimension + j]);
+            }
+        }
+    }
+
+    delete[] adj;
+    delete[] inv;
 }

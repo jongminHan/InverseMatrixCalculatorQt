@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <iostream>
+#include <QDoubleSpinBox>
 
 namespace Ui
 {
@@ -26,7 +27,7 @@ private slots:
 private:
     Ui::MatrixWidget* ui;
     int mDimension;
-    QTextEdit** mMatrixTextGrid;
+    QDoubleSpinBox** mMatrixTextGrid;
     double* mMatrix;
     QPushButton* mCalButton;
 };
