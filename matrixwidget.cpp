@@ -20,6 +20,8 @@ MatrixWidget::MatrixWidget(QWidget* parent, int dimension)
             int xPos = 20 + 110 * i;
             int yPos = 20 + 40 * j;
             mMatrixTextGrid[i * mDimension + j]->move(xPos, yPos);
+            mMatrixTextGrid[i * mDimension + j]->setMinimum(static_cast<double>(-100));
+            mMatrixTextGrid[i * mDimension + j]->setMaximum(static_cast<double>(100));
         }
     }
 
@@ -148,7 +150,8 @@ bool MatrixWidget::Inverse(double* mat, double* inverse)
     double det = GetDeterminantRecursive(mat, mDimension);
     if (static_cast<int>(det) == 0)
     {
-        std::cout << "Singular matrix, can't find its inverse\n";
+        mSingularMatrixDialog = std::make_shared<SingularMatrixDialog>();
+        mSingularMatrixDialog->show();
         return false;
     }
 

@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <iostream>
 #include <QDoubleSpinBox>
+#include <memory>
+#include "singularmatrixdialog.h"
 
 namespace Ui
 {
@@ -30,6 +32,7 @@ private:
     QDoubleSpinBox** mMatrixTextGrid;
     double* mMatrix;
     QPushButton* mCalButton;
+    std::shared_ptr<SingularMatrixDialog> mSingularMatrixDialog;
 };
 
 #endif // MATRIXWIDGET_H
