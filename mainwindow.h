@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "matrixwidget.h"
+#include <iostream>
 #include <QMainWindow>
 #include <memory>
 
@@ -20,9 +21,12 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void on_spinBox_valueChanged(int arg1);
+
 private:
     Ui::MainWindow* ui;
     std::shared_ptr<MatrixWidget> mMatrixWidget;
+    int mDimension;
 };
 
 #endif // MAINWINDOW_H
