@@ -99,11 +99,11 @@ int MatrixWidget::GetDeterminantRecursive(int* mat, int n)
     // 첫째 행의 모든 요소를 반복
     for (int f = 0; f < n; f++)
     {
-        // Getting Cofactor of mat[0][f]
+        // mat[0][f]의 여인수 획득
         GetCofactor(mat, temp, 0, f, n);
         D += sign * mat[f] * GetDeterminantRecursive(temp, n - 1);
 
-        // terms are to be added with alternate sign
+        // 부호 변경
         sign = -sign;
     }
 
@@ -111,7 +111,7 @@ int MatrixWidget::GetDeterminantRecursive(int* mat, int n)
     return D;
 }
 
-// Function to get adjoint of A[N][N] in adj[N][N].
+// 수반 행렬을 구하는 함수
 void MatrixWidget::Adjoint(int* mat, double* adj)
 {
     if (mDimension == 1)
@@ -120,8 +120,9 @@ void MatrixWidget::Adjoint(int* mat, double* adj)
         return;
     }
 
-    // temp is used to store cofactors of A[][]
     int sign = 1;
+
+    // 여인수(cofactor) 저장
     int* temp = new int[mDimension * mDimension];
 
     for (int i = 0; i < mDimension; i++)
@@ -148,7 +149,7 @@ void MatrixWidget::Adjoint(int* mat, double* adj)
 // matrix is singular
 bool MatrixWidget::Inverse(int* mat, double* inverse)
 {
-    // Find determinant of A[][]
+    // 행렬식
     int det = GetDeterminantRecursive(mat, mDimension);
 
     if (det == 0)
@@ -156,12 +157,12 @@ bool MatrixWidget::Inverse(int* mat, double* inverse)
         return false;
     }
 
-    // Find adjoint
+    // 수반 행렬
     double* adj = new double[mDimension * mDimension];
 
     Adjoint(mat, adj);
 
-    // Find Inverse using formula "inverse(A) = adj(A)/det(A)"
+    // 수반행렬을 행렬식으로 나누는 공식(inverse(A) = adj(A)/det(A))으로 역행렬 계산
     for (int i = 0; i < mDimension; i++)
     {
         for (int j = 0; j < mDimension; j++)
@@ -184,9 +185,11 @@ void MatrixWidget::updateMatrix()
         }
     }
 
-    double* adj = new double[mDimension * mDimension];  // To store adjoint of A[][]
+    // 수반 행렬
+    double* adj = new double[mDimension * mDimension];
 
-    double* inv = new double[mDimension * mDimension];  // To store inverse of A[][]
+    // 역행렬
+    double* inv = new double[mDimension * mDimension];
 
 
     Adjoint(mMatrix, adj);
