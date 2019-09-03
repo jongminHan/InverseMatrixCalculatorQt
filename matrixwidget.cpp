@@ -1,34 +1,6 @@
 #include "matrixwidget.h"
 #include "ui_matrixwidget.h"
 
-typedef union
-{
-    double d;
-    struct
-    {
-        unsigned long long int mantissa : 52;
-        unsigned long long int exponent : 11;
-        unsigned long long int sign :     1;
-    } parts;
-} double_cast;
-
-
-bool IsZero(double num)
-{
-    double_cast data;
-    data.d = num;
-
-    // Check both exponent and mantissa parts
-    if(data.parts.exponent == 0u && data.parts.mantissa == 0u)
-    {
-       return true;
-    }
-    else
-    {
-       return false;
-    }
-}
-
 
 MatrixWidget::MatrixWidget(QWidget* parent, int dimension)
     : QWidget(parent)
@@ -36,21 +8,21 @@ MatrixWidget::MatrixWidget(QWidget* parent, int dimension)
     , mDimension(dimension)
 {
     ui->setupUi(this);
-    mMatrixTextGrid = new QDoubleSpinBox*[mDimension * mDimension];
-    mMatrix = new double[mDimension * mDimension] { 0 };
+    mMatrixTextGrid = new QSpinBox*[mDimension * mDimension];
+    mMatrix = new int[mDimension * mDimension] { 0 };
 
 
     for (int i = 0; i < mDimension; i++)
     {
         for (int j = 0; j < mDimension; j++)
         {
-            mMatrixTextGrid[i * mDimension + j] = new QDoubleSpinBox(this);
+            mMatrixTextGrid[i * mDimension + j] = new QSpinBox(this);
             mMatrixTextGrid[i * mDimension + j]->resize(100, 30);
             int xPos = 20 + 110 * i;
             int yPos = 20 + 40 * j;
             mMatrixTextGrid[i * mDimension + j]->move(xPos, yPos);
-            mMatrixTextGrid[i * mDimension + j]->setMinimum(static_cast<double>(-100));
-            mMatrixTextGrid[i * mDimension + j]->setMaximum(static_cast<double>(100));
+            mMatrixTextGrid[i * mDimension + j]->setMinimum(-100);
+            mMatrixTextGrid[i * mDimension + j]->setMaximum(100);
         }
     }
 
@@ -79,7 +51,7 @@ MatrixWidget::~MatrixWidget()
 }
 
 // mat의 여인수를 temp에 저장해주는 함수. n은 현재 mat의 차원
-void MatrixWidget::GetCofactor(double* mat, double* temp, int p, int q, int n)
+void MatrixWidget::GetCofactor(int* mat, int* temp, int p, int q, int n)
 {
     int i = 0;
     int j = 0;
@@ -107,10 +79,10 @@ void MatrixWidget::GetCofactor(double* mat, double* temp, int p, int q, int n)
 }
 
 // 행렬식을 반환하는 재귀 함수
-double MatrixWidget::GetDeterminantRecursive(double* mat, int n)
+int MatrixWidget::GetDeterminantRecursive(int* mat, int n)
 {
     // 반환값 초기화
-    double D = 0;
+    int D = 0;
 
     // 주어진 행렬의 요소가 한 개 밖에 없을 경우 해당 요소의 값을 반환
     if (n == 1)
@@ -118,11 +90,13 @@ double MatrixWidget::GetDeterminantRecursive(double* mat, int n)
         return mat[0];
     }
 
-    double* temp = new double[mDimension * mDimension]; // To store cofactors
+    // 여인수(cofactor) 저장
+    int* temp = new int[mDimension * mDimension];
 
-    int sign = 1;  // To store sign multiplier
+    // 부호 저장
+    int sign = 1;
 
-     // Iterate for each element of first row
+    // 첫째 행의 모든 요소를 반복
     for (int f = 0; f < n; f++)
     {
         // Getting Cofactor of mat[0][f]
@@ -138,7 +112,7 @@ double MatrixWidget::GetDeterminantRecursive(double* mat, int n)
 }
 
 // Function to get adjoint of A[N][N] in adj[N][N].
-void MatrixWidget::Adjoint(double* mat, double* adj)
+void MatrixWidget::Adjoint(int* mat, double* adj)
 {
     if (mDimension == 1)
     {
@@ -148,7 +122,7 @@ void MatrixWidget::Adjoint(double* mat, double* adj)
 
     // temp is used to store cofactors of A[][]
     int sign = 1;
-    double* temp = new double[mDimension * mDimension];
+    int* temp = new int[mDimension * mDimension];
 
     for (int i = 0; i < mDimension; i++)
     {
@@ -172,12 +146,12 @@ void MatrixWidget::Adjoint(double* mat, double* adj)
 
 // Function to calculate and store inverse, returns false if
 // matrix is singular
-bool MatrixWidget::Inverse(double* mat, double* inverse)
+bool MatrixWidget::Inverse(int* mat, double* inverse)
 {
     // Find determinant of A[][]
-    double det = GetDeterminantRecursive(mat, mDimension);
+    int det = GetDeterminantRecursive(mat, mDimension);
 
-    if (IsZero(det))
+    if (det == 0)
     {
         return false;
     }
@@ -220,13 +194,8 @@ void MatrixWidget::updateMatrix()
 
     if (Inverse(mMatrix, inv))
     {
-        for (int i = 0; i < mDimension; i++)
-        {
-            for (int j = 0; j < mDimension; j++)
-            {
-                mMatrixTextGrid[i * mDimension + j]->setValue(inv[i * mDimension + j]);
-            }
-        }
+        mInverseMatrixWidget = std::make_shared<InverseMatrixWidget>(nullptr, inv);
+        mInverseMatrixWidget->show();
     }
     else
     {

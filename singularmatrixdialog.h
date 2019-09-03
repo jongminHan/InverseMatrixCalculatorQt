@@ -1,10 +1,9 @@
-#ifndef SINGULARMATRIXDIALOG_H
-#define SINGULARMATRIXDIALOG_H
-
+#pragma once
 #include <QDialog>
 
-namespace Ui {
-class SingularMatrixDialog;
+namespace Ui
+{
+    class SingularMatrixDialog;
 }
 
 class SingularMatrixDialog : public QDialog
@@ -13,7 +12,7 @@ class SingularMatrixDialog : public QDialog
 
 public:
     explicit SingularMatrixDialog(QWidget* parent = nullptr);
-    ~SingularMatrixDialog();
+    virtual  ~SingularMatrixDialog();
 
 private slots:
     void on_pushButton_clicked();
@@ -21,5 +20,3 @@ private slots:
 private:
     Ui::SingularMatrixDialog *ui;
 };
-
-#endif // SINGULARMATRIXDIALOG_H

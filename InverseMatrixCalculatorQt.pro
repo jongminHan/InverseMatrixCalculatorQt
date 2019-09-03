@@ -25,17 +25,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        inversematrixwidget.cpp \
         main.cpp \
         mainwindow.cpp \
         matrixwidget.cpp \
         singularmatrixdialog.cpp
 
 HEADERS += \
+        inversematrixwidget.h \
         mainwindow.h \
         matrixwidget.h \
         singularmatrixdialog.h
 
 FORMS += \
+        inversematrixwidget.ui \
         mainwindow.ui \
         matrixwidget.ui \
         singularmatrixdialog.ui

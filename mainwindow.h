@@ -1,6 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#pragma once
 #include "matrixwidget.h"
 #include <QMainWindow>
 #include <memory>
@@ -15,7 +13,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     explicit MainWindow(QWidget* parent = nullptr);
-    ~MainWindow();
+    virtual ~MainWindow();
 
 private slots:
     void on_pushButton_clicked();
@@ -27,5 +25,3 @@ private:
     std::shared_ptr<MatrixWidget> mMatrixWidget;
     int mDimension;
 };
-
-#endif // MAINWINDOW_H

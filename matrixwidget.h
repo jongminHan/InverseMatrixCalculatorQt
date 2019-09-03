@@ -1,13 +1,12 @@
-#ifndef MATRIXWIDGET_H
-#define MATRIXWIDGET_H
-
+#pragma once
+#include "singularmatrixdialog.h"
+#include "inversematrixwidget.h"
 #include <QWidget>
 #include <QTextEdit>
 #include <QPushButton>
 #include <iostream>
 #include <QDoubleSpinBox>
 #include <memory>
-#include "singularmatrixdialog.h"
 
 namespace Ui
 {
@@ -19,20 +18,19 @@ class MatrixWidget : public QWidget
     Q_OBJECT
 public:
     explicit MatrixWidget(QWidget* parent = nullptr, int dimension = 0);
-    ~MatrixWidget();
-    void GetCofactor(double* mat, double* temp, int p, int q, int n);
-    double GetDeterminantRecursive(double* mat, int n);
-    void Adjoint(double* mat, double* adj);
-    bool Inverse(double* mat, double* inverse);
+    virtual ~MatrixWidget();
+    void GetCofactor(int* mat, int* temp, int p, int q, int n);
+    int GetDeterminantRecursive(int* mat, int n);
+    void Adjoint(int* mat, double* adj);
+    bool Inverse(int* mat, double* inverse);
 private slots:
     void updateMatrix();
 private:
     Ui::MatrixWidget* ui;
     int mDimension;
-    QDoubleSpinBox** mMatrixTextGrid;
-    double* mMatrix;
+    QSpinBox** mMatrixTextGrid;
+    int* mMatrix;
     QPushButton* mCalButton;
     std::shared_ptr<SingularMatrixDialog> mSingularMatrixDialog;
+    std::shared_ptr<InverseMatrixWidget> mInverseMatrixWidget;
 };
-
-#endif // MATRIXWIDGET_H
