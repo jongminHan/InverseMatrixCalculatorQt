@@ -12,7 +12,7 @@ class SingularMatrixDialog : public QDialog
 
 public:
     explicit SingularMatrixDialog(QWidget* parent = nullptr);
-    virtual  ~SingularMatrixDialog();
+    ~SingularMatrixDialog();
 
 private slots:
     void on_pushButton_clicked();

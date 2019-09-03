@@ -194,7 +194,7 @@ void MatrixWidget::updateMatrix()
 
     if (Inverse(mMatrix, inv))
     {
-        mInverseMatrixWidget = std::make_shared<InverseMatrixWidget>(nullptr, inv);
+        mInverseMatrixWidget = std::make_shared<InverseMatrixWidget>(nullptr, inv, mDimension);
         mInverseMatrixWidget->show();
     }
     else

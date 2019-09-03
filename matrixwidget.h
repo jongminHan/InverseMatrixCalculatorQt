@@ -1,7 +1,6 @@
 #pragma once
 #include "singularmatrixdialog.h"
 #include "inversematrixwidget.h"
-#include <QWidget>
 #include <QTextEdit>
 #include <QPushButton>
 #include <iostream>
@@ -18,7 +17,7 @@ class MatrixWidget : public QWidget
     Q_OBJECT
 public:
     explicit MatrixWidget(QWidget* parent = nullptr, int dimension = 0);
-    virtual ~MatrixWidget();
+    ~MatrixWidget();
     void GetCofactor(int* mat, int* temp, int p, int q, int n);
     int GetDeterminantRecursive(int* mat, int n);
     void Adjoint(int* mat, double* adj);
