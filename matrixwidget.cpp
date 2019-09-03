@@ -1,6 +1,35 @@
 #include "matrixwidget.h"
 #include "ui_matrixwidget.h"
 
+typedef union
+{
+    double d;
+    struct
+    {
+        unsigned long long int mantissa : 52;
+        unsigned long long int exponent : 11;
+        unsigned long long int sign :     1;
+    } parts;
+} double_cast;
+
+
+bool IsZero(double num)
+{
+    double_cast data;
+    data.d = num;
+
+    // Check both exponent and mantissa parts
+    if(data.parts.exponent == 0u && data.parts.mantissa == 0u)
+    {
+       return true;
+    }
+    else
+    {
+       return false;
+    }
+}
+
+
 MatrixWidget::MatrixWidget(QWidget* parent, int dimension)
     : QWidget(parent)
     , ui(new Ui::MatrixWidget)
@@ -49,25 +78,24 @@ MatrixWidget::~MatrixWidget()
     delete[] mMatrix;
 }
 
-// Function to get cofactor of mat[p][q] in temp[][]. n is current
-// dimension of mat[][]
+// mat의 여인수를 temp에 저장해주는 함수. n은 현재 mat의 차원
 void MatrixWidget::GetCofactor(double* mat, double* temp, int p, int q, int n)
 {
-    int i = 0, j = 0;
+    int i = 0;
+    int j = 0;
 
-    // Looping for each element of the matrix
+    // 행렬의 모든 요소를 탐색
     for (int row = 0; row < n; row++)
     {
         for (int col = 0; col < n; col++)
         {
-            //  Copying into temporary matrix only those element
-            //  which are not in given row and column
+            // 주어진 행과 열에 해당하지 않는 요소만 temp로 복사
             if (row != p && col != q)
             {
-                temp[i * mDimension +j++] = mat[row * mDimension + col];
+                temp[i * mDimension + j++] = mat[row * mDimension + col];
 
-                // Row is filled, so increase row index and
-                // reset col index
+                // 행이 모두 채워졌으면, 행의 인덱스를 1 증가.
+                // 열의 인덱스는 0으로 초기화
                 if (j == n - 1)
                 {
                     j = 0;
@@ -78,13 +106,13 @@ void MatrixWidget::GetCofactor(double* mat, double* temp, int p, int q, int n)
     }
 }
 
-/* Recursive function for finding determinant of matrix.
-   n is current dimension of mat[][]. */
+// 행렬식을 반환하는 재귀 함수
 double MatrixWidget::GetDeterminantRecursive(double* mat, int n)
 {
-    int D = 0; // Initialize result
+    // 반환값 초기화
+    double D = 0;
 
-    //  Base case : if matrix contains single element
+    // 주어진 행렬의 요소가 한 개 밖에 없을 경우 해당 요소의 값을 반환
     if (n == 1)
     {
         return mat[0];
@@ -148,10 +176,9 @@ bool MatrixWidget::Inverse(double* mat, double* inverse)
 {
     // Find determinant of A[][]
     double det = GetDeterminantRecursive(mat, mDimension);
-    if (static_cast<int>(det) == 0)
+
+    if (IsZero(det))
     {
-        mSingularMatrixDialog = std::make_shared<SingularMatrixDialog>();
-        mSingularMatrixDialog->show();
         return false;
     }
 
@@ -200,6 +227,11 @@ void MatrixWidget::updateMatrix()
                 mMatrixTextGrid[i * mDimension + j]->setValue(inv[i * mDimension + j]);
             }
         }
+    }
+    else
+    {
+        mSingularMatrixDialog = std::make_shared<SingularMatrixDialog>();
+        mSingularMatrixDialog->show();
     }
 
     delete[] adj;
